@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:presensi_app/PresencePage.dart';
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
@@ -17,30 +18,30 @@ class DashboardPage extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 children: [
                   kartuJadwal(
-                    namaKelas: 'XI RPL 2', 
-                    jamPelajaran: '7:15 - 8:45', 
-                    status: '(Sedang Berlangsung)', 
+                    namaKelas: 'XI RPL 2',
+                    jamPelajaran: '7:15 - 8:45',
+                    status: '(Sedang Berlangsung)',
                     isActive: true,
                   ),
                   kartuJadwal(
-                    namaKelas: 'XI DKV 2', 
-                    jamPelajaran: '10:45 - 11:30', 
-                    status: 'Status : Menunggu', 
+                    namaKelas: 'XI DKV 2',
+                    jamPelajaran: '10:45 - 11:30',
+                    status: 'Status : Menunggu',
                     isActive: false,
                   ),
                   kartuJadwal(
-                    namaKelas: 'XI TKJ 2', 
-                    jamPelajaran: '12:30 - 14:00', 
-                    status: 'Status : Menunggu', 
+                    namaKelas: 'XI TKJ 2',
+                    jamPelajaran: '12:30 - 14:00',
+                    status: 'Status : Menunggu',
                     isActive: false,
                   ),
                   kartuJadwal(
-                    namaKelas: 'XI AKL 2', 
-                    jamPelajaran: '14:00 - 15:30', 
-                    status: 'Status : Menunggu', 
+                    namaKelas: 'XI AKL 2',
+                    jamPelajaran: '14:00 - 15:30',
+                    status: 'Status : Menunggu',
                     isActive: false,
                   ),
-                  SizedBox(height: 20)
+                  SizedBox(height: 20),
                 ],
               ),
             ),
@@ -57,23 +58,14 @@ class DashboardPage extends StatelessWidget {
         iconSize: 32,
         elevation: 15,
         items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.grid_view),
-            label: 'Home', 
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.grid_view), label: 'Home'),
           BottomNavigationBarItem(
             icon: Icon(Icons.event_note),
-            label: 'Jadwal', 
+            label: 'Jadwal',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.group),
-            label: 'Kelas', 
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.grid_view),
-            label: 'Profil', 
-          ),
-        ]
+          BottomNavigationBarItem(icon: Icon(Icons.group), label: 'Kelas'),
+          BottomNavigationBarItem(icon: Icon(Icons.grid_view), label: 'Profil'),
+        ],
       ),
     );
   }
@@ -88,12 +80,13 @@ class DashboardPage extends StatelessWidget {
           bottomLeft: Radius.circular(10),
           bottomRight: Radius.circular(10),
         ),
-        boxShadow: [BoxShadow(
+        boxShadow: [
+          BoxShadow(
             color: Colors.blue.withOpacity(0.3),
             blurRadius: 10,
-            offset: Offset(0, 5) 
-          )
-        ]
+            offset: Offset(0, 5),
+          ),
+        ],
       ),
       child: Row(
         children: [
@@ -153,9 +146,11 @@ class kartuJadwal extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: Colors.grey.shade300),
         boxShadow: [
-          BoxShadow(color: Colors.grey.withOpacity(0.1), 
-          blurRadius: 10, 
-          offset: Offset(0, 5)),
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            blurRadius: 10,
+            offset: Offset(0, 5),
+          ),
         ],
       ),
       child: Column(
@@ -193,12 +188,15 @@ class kartuJadwal extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  print("Presensi Dimulai");
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Presencepage())
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.orange,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadiusGeometry.circular(20)
+                    borderRadius: BorderRadiusGeometry.circular(20),
                   ),
                 ),
                 child: Text(
@@ -207,7 +205,7 @@ class kartuJadwal extends StatelessWidget {
                 ),
               ),
             ),
-          // if(!isActive)
+
         ],
       ),
     );
