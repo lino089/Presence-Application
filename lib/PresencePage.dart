@@ -9,6 +9,8 @@ class Presencepage extends StatefulWidget {
 class _HalamanPresensiState extends State<Presencepage> {
   List<Siswa> listSiswa = List.from(daftarSiswaAwal);
 
+  List<Siswa> listSiswaHadir = [];
+
   int totalSiswa = daftarSiswaAwal.length;
   int sudahPresensi = 0;
 
@@ -24,29 +26,9 @@ class _HalamanPresensiState extends State<Presencepage> {
           sudahPresensi++;
         }
 
+        listSiswaHadir.add(siswaYangDihapus);
+
         listSiswa.removeAt(index);
-
-        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('${siswaYangDihapus.nama} Hadir'),
-            duration: Duration(seconds: 3),
-            action: SnackBarAction(
-              label: 'Batal',
-              onPressed: () {
-                setState(() {
-                  listSiswa.insert(indexLama, siswaYangDihapus);
-
-                  listSiswa[indexLama].status = statusLama;
-
-                  if (nambahProgres) {
-                    sudahPresensi--;
-                  }
-                });
-              },
-            ),
-          ),
-        );
       } else {
         if (statusLama == '') {
           sudahPresensi++;
@@ -102,6 +84,14 @@ class _HalamanPresensiState extends State<Presencepage> {
             ),
           ],
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.history, color: Colors.black),
+            onPressed: () {
+              _tampilkanModalHistory();
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -141,6 +131,84 @@ class _HalamanPresensiState extends State<Presencepage> {
           ),
         ],
       ),
+    );
+  }
+
+  void _tampilkanModalHistory() {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setModalState) {
+            return Container(
+              padding: EdgeInsets.all(20),
+              height: 500,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Riwayat Kehadiran (${listSiswaHadir.length})",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    "Klik tombol silang untuk membatalkan kehadiran",
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                  Divider(),
+
+                  Expanded(
+                    child: listSiswaHadir.isEmpty
+                        ? Center(child: Text("Belum ada siswa yang hadir"))
+                        : ListView.builder(
+                            itemCount: listSiswaHadir.length,
+                            itemBuilder: (context, index) {
+                              final siswa = listSiswaHadir[index];
+                              return ListTile(
+                                leading: CircleAvatar(
+                                  backgroundImage: NetworkImage(
+                                    siswa.fotoProfile,
+                                  ),
+                                ),
+                                title: Text(
+                                  siswa.nama,
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                subtitle: Text(siswa.nis),
+                                trailing: IconButton(
+                                  icon: Icon(Icons.cancel, color: Colors.red),
+                                  onPressed: () {
+                                    setState(() {
+                                      listSiswa.add(siswa);
+
+                                      listSiswa.sort(
+                                        (a, b) => a.nis.compareTo(b.nis),
+                                      );
+
+                                      listSiswaHadir.removeAt(index);
+
+                                      sudahPresensi--;
+                                    });
+
+                                    setModalState(() {});
+
+                                    if (listSiswaHadir.isEmpty)
+                                      Navigator.pop(context);
+                                  },
+                                ),
+                              );
+                            },
+                          ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 
@@ -321,7 +389,7 @@ class _HalamanPresensiState extends State<Presencepage> {
                   ),
                 ),
               ),
-              SizedBox(height: 30)
+              SizedBox(height: 30),
             ],
           ),
         ),
@@ -341,7 +409,7 @@ class _HalamanPresensiState extends State<Presencepage> {
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: textColor.withOpacity(0.2))
+        border: Border.all(color: textColor.withOpacity(0.2)),
       ),
       child: Column(
         children: [
