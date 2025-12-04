@@ -24,7 +24,7 @@ var daftarSiswaAwal = [
   Siswa(nama: "ESA NUR'UDZRI YUNAN ARIFIANTO", nis: '17804', fotoProfile: ''),
   Siswa(nama: 'FADHILAH MARELE SAPUTRO', nis: '17805', fotoProfile: ''),
   Siswa(nama: 'FAIZ BARAKA PUTRA', nis: '17806', fotoProfile: ''),
-  Siswa(nama: 'FANDY MARVELLINO', nis: '17807', fotoProfile: ''),
+  Siswa(nama: 'FANDY MARVELLINO', nis: '17807', fotoProfile: 'images/fotoProfile.jpg'),
   Siswa(nama: 'FERNANDA DENIA EKA SAPUTRA', nis: '17808', fotoProfile: ''),
   Siswa(nama: 'GANGGAS YOGASWARA', nis: '17809', fotoProfile: ''),
   Siswa(nama: 'GENTA NILAM PRANA', nis: '17810', fotoProfile: ''),

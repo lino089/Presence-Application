@@ -17,7 +17,6 @@ class _HalamanPresensiState extends State<Presencepage> {
   void updateStatus(int index, String statusBaru) {
     setState(() {
       Siswa siswaYangDihapus = listSiswa[index];
-      int indexLama = index;
       String statusLama = siswaYangDihapus.status;
 
       if (statusBaru == 'H') {
@@ -50,11 +49,15 @@ class _HalamanPresensiState extends State<Presencepage> {
 
     int totalSiapKirim = jumlahHadir + jumlahSakit + jumlahAlpha + jumlahIzin;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey[100],
 
       appBar: AppBar(
         backgroundColor: Colors.white,
-        elevation: 0,
+        elevation: 2,
+        scrolledUnderElevation: 2,
+        shadowColor: Colors.black,
+        surfaceTintColor: Colors.white,
+        toolbarHeight: 80,
 
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: Colors.black),
@@ -234,7 +237,7 @@ class _HalamanPresensiState extends State<Presencepage> {
           CircleAvatar(
             radius: 25,
             backgroundColor: Colors.grey,
-            backgroundImage: NetworkImage(siswa.fotoProfile),
+            backgroundImage: AssetImage(siswa.fotoProfile),
           ),
           SizedBox(width: 15),
 
