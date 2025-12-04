@@ -59,62 +59,82 @@ class _HalamanPresensiState extends State<Presencepage> {
         surfaceTintColor: Colors.white,
         toolbarHeight: 80,
 
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: Colors.black),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+        automaticallyImplyLeading: false,
+        centerTitle: true,
+        titleSpacing: 0,
 
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "XI RPL 2",
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
-            ),
-            Text(
-              "Pemrograman Pengkat Bergerak",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 14,
-                fontWeight: FontWeight.normal,
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.history, color: Colors.black),
-            onPressed: () {
-              _tampilkanModalHistory();
-            },
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        title: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 600),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
               children: [
-                Text("Progres Presensi ${(progressValue * 100).toInt()}%"),
-                SizedBox(height: 10),
-                LinearProgressIndicator(
-                  value: progressValue,
-                  backgroundColor: Colors.grey[200],
-                  color: Colors.blueAccent,
-                  minHeight: 15,
-                  borderRadius: BorderRadius.circular(10),
+                IconButton(
+                  icon: Icon(Icons.arrow_back_ios, color: Colors.black),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "XI RPL 2",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                      Text(
+                        "Pemrograman Pengkat Bergerak",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 14,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(Icons.history, color: Colors.black),
+                  onPressed: () {
+                    _tampilkanModalHistory();
+                  },
                 ),
               ],
             ),
           ),
+        ),
+      ),
+      body: Column(
+        children: [
+          Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: 600),
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Progres Presensi ${(progressValue * 100).toInt()}%"),
+                    SizedBox(height: 10),
+                    LinearProgressIndicator(
+                      value: progressValue,
+                      backgroundColor: Colors.grey[200],
+                      color: Colors.blueAccent,
+                      minHeight: 15,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+
           Expanded(
             child: ListView.builder(
               padding: EdgeInsets.symmetric(horizontal: 20),
@@ -216,62 +236,76 @@ class _HalamanPresensiState extends State<Presencepage> {
   }
 
   Widget _buildCardSiswa(Siswa siswa, int index) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 15),
-      padding: EdgeInsets.all(15),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.grey.shade300),
-        boxShadow: [
-          BoxShadow(color: Colors.grey, blurRadius: 5, offset: Offset(0, 3)),
-        ],
-      ),
-      child: Row(
-        children: [
-          Text(
-            "${index + 1}.",
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+    return Center(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: 600),
+        child: Container(
+          margin: EdgeInsets.only(bottom: 15),
+          padding: EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: Colors.grey.shade300),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey,
+                blurRadius: 5,
+                offset: Offset(0, 3),
+              ),
+            ],
           ),
-          SizedBox(width: 10),
-          CircleAvatar(
-            radius: 25,
-            backgroundColor: Colors.grey,
-            backgroundImage: AssetImage(siswa.fotoProfile),
-          ),
-          SizedBox(width: 15),
+          child: Row(
+            children: [
+              Text(
+                "${index + 1}.",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(width: 15),
+              CircleAvatar(
+                radius: 25,
+                backgroundColor: Colors.grey,
+                backgroundImage: AssetImage(siswa.fotoProfile),
+              ),
 
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  siswa.nama,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                ),
-                Text(
-                  "Nis : ${siswa.nis}",
-                  style: TextStyle(color: Colors.grey[600], fontSize: 12),
-                ),
+              SizedBox(width: 20),
 
-                SizedBox(height: 10),
-
-                Row(
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildTombolBulat('H', siswa.status, index),
-                    SizedBox(width: 8),
-                    _buildTombolBulat('S', siswa.status, index),
-                    SizedBox(width: 8),
-                    _buildTombolBulat('I', siswa.status, index),
-                    SizedBox(width: 8),
-                    _buildTombolBulat('A', siswa.status, index),
-                    SizedBox(width: 8),
+                    Text(
+                      siswa.nama,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      "Nis : ${siswa.nis}",
+                      style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                    ),
+
+                    SizedBox(height: 12),
+
+                    Row(
+                      children: [
+                        _buildTombolBulat('H', siswa.status, index),
+                        SizedBox(width: 8),
+                        _buildTombolBulat('S', siswa.status, index),
+                        SizedBox(width: 8),
+                        _buildTombolBulat('I', siswa.status, index),
+                        SizedBox(width: 8),
+                        _buildTombolBulat('A', siswa.status, index),
+                        SizedBox(width: 8),
+                      ],
+                    ),
                   ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -322,78 +356,93 @@ class _HalamanPresensiState extends State<Presencepage> {
     int totalSiap,
   ) {
     return Container(
-      // padding: EdgeInsets.all(20),
+      width: double.infinity,
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
           BoxShadow(color: Colors.grey, blurRadius: 10, offset: Offset(0, -5)),
         ],
       ),
-      child: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.all(24),
-          child: Column(
-            children: [
-              Row(
+      child: Center(
+        heightFactor: 1.0,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 600),
+          child: SafeArea(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  _buildKotakStatus(
-                    "Hadir",
-                    hadir,
-                    Colors.green.shade100,
-                    Colors.green.shade600,
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Expanded(
+                        child: _buildKotakStatus(
+                          "Hadir",
+                          hadir,
+                          Colors.green.shade100,
+                          Colors.green.shade600,
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: _buildKotakStatus(
+                          "Sakit",
+                          sakit,
+                          Colors.orange.shade100,
+                          Colors.orange.shade600,
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: _buildKotakStatus(
+                          "Izin",
+                          izin,
+                          Colors.blue.shade100,
+                          Colors.blue.shade600,
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: _buildKotakStatus(
+                          "Alpha",
+                          alpha,
+                          Colors.red.shade100,
+                          Colors.red.shade600,
+                        ),
+                      ),
+                    ],
                   ),
-                  SizedBox(width: 10),
-                  _buildKotakStatus(
-                    "Sakit",
-                    sakit,
-                    Colors.orange.shade100,
-                    Colors.orange.shade600,
+                  SizedBox(height: 15),
+
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        _simulasiKirimData(hadir, sakit, izin, alpha);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blueAccent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        elevation: 5,
+                      ),
+                      child: Text(
+                        "Kirim Presensi ($totalSiap)",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                   ),
-                  SizedBox(width: 10),
-                  _buildKotakStatus(
-                    "Izin",
-                    izin,
-                    Colors.blue.shade100,
-                    Colors.blue.shade600,
-                  ),
-                  SizedBox(width: 10),
-                  _buildKotakStatus(
-                    "Alpha",
-                    alpha,
-                    Colors.red.shade100,
-                    Colors.red.shade600,
-                  ),
+                  SizedBox(height: 5),
                 ],
               ),
-              SizedBox(height: 25),
-
-              SizedBox(
-                width: double.infinity,
-                height: 55,
-                child: ElevatedButton(
-                  onPressed: () {
-                    _simulasiKirimData(hadir, sakit, izin, alpha);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueAccent,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    elevation: 5,
-                  ),
-                  child: Text(
-                    "Kirim Presensi ($totalSiap)",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 30),
-            ],
+            ),
           ),
         ),
       ),
@@ -408,7 +457,7 @@ class _HalamanPresensiState extends State<Presencepage> {
   ) {
     return Container(
       width: 75,
-      padding: EdgeInsets.symmetric(vertical: 12),
+      padding: EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(10),
@@ -420,12 +469,12 @@ class _HalamanPresensiState extends State<Presencepage> {
             count.toString(),
             style: TextStyle(
               color: textColor,
-              fontSize: 24,
+              fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
           ),
           SizedBox(width: 10),
-          Text(label, style: TextStyle(color: textColor, fontSize: 14)),
+          Text(label, style: TextStyle(color: textColor, fontSize: 12)),
         ],
       ),
     );

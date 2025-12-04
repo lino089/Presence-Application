@@ -13,34 +13,43 @@ class DashboardPage extends StatelessWidget {
           children: [
             HeaderProfil(),
             SizedBox(height: 20),
+
             Expanded(
               child: ListView(
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 children: [
+                _responsiveCard(
                   kartuJadwal(
                     namaKelas: 'XI RPL 2',
                     jamPelajaran: '7:15 - 8:45',
                     status: '(Sedang Berlangsung)',
                     isActive: true,
                   ),
+                ),
+                _responsiveCard(
                   kartuJadwal(
                     namaKelas: 'XI DKV 2',
                     jamPelajaran: '10:45 - 11:30',
                     status: 'Status : Menunggu',
                     isActive: false,
                   ),
+                ),
+                _responsiveCard(
                   kartuJadwal(
                     namaKelas: 'XI TKJ 2',
                     jamPelajaran: '12:30 - 14:00',
                     status: 'Status : Menunggu',
                     isActive: false,
                   ),
+                ),
+                _responsiveCard(
                   kartuJadwal(
                     namaKelas: 'XI AKL 2',
                     jamPelajaran: '14:00 - 15:30',
                     status: 'Status : Menunggu',
                     isActive: false,
                   ),
+                ),
                   SizedBox(height: 20),
                 ],
               ),
@@ -48,24 +57,49 @@ class DashboardPage extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.black45,
-        iconSize: 32,
-        elevation: 15,
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.grid_view), label: 'Home'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.event_note),
-            label: 'Jadwal',
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -2))
+          ]
+        ),
+        child: Center(
+          heightFactor: 1.0,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 700),
+            child: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            backgroundColor: Colors.white,
+            showSelectedLabels: false,
+            showUnselectedLabels: false,
+            selectedItemColor: Colors.black,
+            unselectedItemColor: Colors.black45,
+            iconSize: 32,
+            elevation: 0,
+            items: [
+              BottomNavigationBarItem(icon: Icon(Icons.grid_view), label: 'Home'),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.event_note),
+                label: 'Jadwal',
+              ),
+              BottomNavigationBarItem(icon: Icon(Icons.group), label: 'Kelas'),
+              BottomNavigationBarItem(icon: Icon(Icons.grid_view), label: 'Profil'),
+            ],
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.group), label: 'Kelas'),
-          BottomNavigationBarItem(icon: Icon(Icons.grid_view), label: 'Profil'),
-        ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _responsiveCard(Widget child) {
+    return Center(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: 700,
+        ),
+        child: child,
       ),
     );
   }
@@ -88,39 +122,48 @@ class DashboardPage extends StatelessWidget {
           ),
         ],
       ),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 40,
-            backgroundColor: Colors.grey,
-            backgroundImage: NetworkImage('https://i.pravatar.cc/150?img=5'),
-          ),
-          SizedBox(width: 20),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+      child: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 700),
+          child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+          child: Row(
             children: [
-              Text(
-                'Rossy Rahmadani',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+              CircleAvatar(
+                radius: 40,
+                backgroundColor: Colors.grey,
+                backgroundImage: NetworkImage('https://i.pravatar.cc/150?img=5'),
               ),
-              SizedBox(height: 8),
-              Text(
-                'Guru Rekayasa Perangkat Lunak',
-                style: TextStyle(color: Colors.white70, fontSize: 14),
-              ),
-              SizedBox(height: 5),
-              Text(
-                'Senin, 28 Oktober, 2025',
-                style: TextStyle(color: Colors.white, fontSize: 12),
+              SizedBox(width: 20),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Rossy Rahmadani',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    'Guru Rekayasa Perangkat Lunak',
+                    style: TextStyle(color: Colors.white70, fontSize: 14),
+                  ),
+                  SizedBox(height: 5),
+                  Text(
+                    'Senin, 28 Oktober, 2025',
+                    style: TextStyle(color: Colors.white, fontSize: 12),
+                  ),
+                ],
               ),
             ],
           ),
-        ],
+        ),
+        ),
       ),
+      
     );
   }
 }
@@ -190,7 +233,7 @@ class kartuJadwal extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Presencepage())
+                    MaterialPageRoute(builder: (context) => Presencepage()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -205,7 +248,6 @@ class kartuJadwal extends StatelessWidget {
                 ),
               ),
             ),
-
         ],
       ),
     );
