@@ -8,30 +8,19 @@ class Presencepage extends StatefulWidget {
 
 class _HalamanPresensiState extends State<Presencepage> {
   List<Siswa> listSiswa = List.from(daftarSiswaAwal);
-
   List<Siswa> listSiswaHadir = [];
-
+  
   int totalSiswa = daftarSiswaAwal.length;
-  int sudahPresensi = 0;
 
   void updateStatus(int index, String statusBaru) {
     setState(() {
-      Siswa siswaYangDihapus = listSiswa[index];
-      String statusLama = siswaYangDihapus.status;
+      Siswa siswa = listSiswa[index];
 
       if (statusBaru == 'H') {
-        bool nambahProgres = (statusLama == '');
-        if (nambahProgres) {
-          sudahPresensi++;
-        }
-
-        listSiswaHadir.add(siswaYangDihapus);
-
+        siswa.status = 'H';
+        listSiswaHadir.add(siswa);
         listSiswa.removeAt(index);
       } else {
-        if (statusLama == '') {
-          sudahPresensi++;
-        }
         listSiswa[index].status = statusBaru;
       }
     });
@@ -39,34 +28,34 @@ class _HalamanPresensiState extends State<Presencepage> {
 
   @override
   Widget build(BuildContext context) {
-    double progressValue = totalSiswa == 0 ? 0 : sudahPresensi / totalSiswa;
-
-    int jumlahHadir = totalSiswa - listSiswa.length;
+    int countHadir = listSiswaHadir.length;
+    int countSisaSudahAbsen = listSiswa.where((siswa) => siswa.status != '').length;
+    int totalSudahPresensi = countHadir + countSisaSudahAbsen;
+    double progressValue = totalSiswa == 0 ? 0 : totalSudahPresensi / totalSiswa;
 
     int jumlahSakit = listSiswa.where((siswa) => siswa.status == 'S').length;
-    int jumlahIzin = listSiswa.where((siswa) => siswa.status == 'I').length;
+    int jumlahIzin  = listSiswa.where((siswa) => siswa.status == 'I').length;
     int jumlahAlpha = listSiswa.where((siswa) => siswa.status == 'A').length;
+    int jumlahHadir = listSiswaHadir.length; 
 
     int totalSiapKirim = jumlahHadir + jumlahSakit + jumlahAlpha + jumlahIzin;
+
     return Scaffold(
       backgroundColor: Colors.grey[100],
-
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 2,
         scrolledUnderElevation: 2,
-        shadowColor: Colors.black,
+        shadowColor: Colors.black.withOpacity(0.1),
         surfaceTintColor: Colors.white,
         toolbarHeight: 80,
-
         automaticallyImplyLeading: false,
         centerTitle: true,
         titleSpacing: 0,
-
         title: ConstrainedBox(
           constraints: BoxConstraints(maxWidth: 600),
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Row(
               children: [
                 IconButton(
@@ -79,22 +68,24 @@ class _HalamanPresensiState extends State<Presencepage> {
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         "XI RPL 2",
                         style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                          fontSize: 20,
                         ),
                       ),
                       Text(
-                        "Pemrograman Pengkat Bergerak",
+                        "Pemrograman Perangkat Bergerak",
                         style: TextStyle(
-                          color: Colors.black,
+                          color: Colors.black54,
                           fontSize: 14,
                           fontWeight: FontWeight.normal,
                         ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
@@ -134,14 +125,13 @@ class _HalamanPresensiState extends State<Presencepage> {
               ),
             ),
           ),
-
           Expanded(
             child: ListView.builder(
               padding: EdgeInsets.symmetric(horizontal: 20),
               itemCount: listSiswa.length,
               itemBuilder: (context, index) {
-                final Siswa = listSiswa[index];
-                return _buildCardSiswa(Siswa, index);
+                final siswa = listSiswa[index];
+                return _buildCardSiswa(siswa, index);
               },
             ),
           ),
@@ -182,7 +172,6 @@ class _HalamanPresensiState extends State<Presencepage> {
                     style: TextStyle(color: Colors.grey),
                   ),
                   Divider(),
-
                   Expanded(
                     child: listSiswaHadir.isEmpty
                         ? Center(child: Text("Belum ada siswa yang hadir"))
@@ -192,9 +181,13 @@ class _HalamanPresensiState extends State<Presencepage> {
                               final siswa = listSiswaHadir[index];
                               return ListTile(
                                 leading: CircleAvatar(
-                                  backgroundImage: NetworkImage(
-                                    siswa.fotoProfile,
-                                  ),
+                                  backgroundColor: Colors.grey,
+                                  backgroundImage: siswa.fotoProfile.isNotEmpty
+                                      ? AssetImage(siswa.fotoProfile)
+                                      : null,
+                                  child: siswa.fotoProfile.isEmpty
+                                      ? Icon(Icons.person, color: Colors.grey)
+                                      : null,
                                 ),
                                 title: Text(
                                   siswa.nama,
@@ -205,15 +198,10 @@ class _HalamanPresensiState extends State<Presencepage> {
                                   icon: Icon(Icons.cancel, color: Colors.red),
                                   onPressed: () {
                                     setState(() {
+                                      siswa.status = '';
                                       listSiswa.add(siswa);
-
-                                      listSiswa.sort(
-                                        (a, b) => a.nis.compareTo(b.nis),
-                                      );
-
+                                      listSiswa.sort((a, b) => a.nis.compareTo(b.nis));
                                       listSiswaHadir.removeAt(index);
-
-                                      sudahPresensi--;
                                     });
 
                                     setModalState(() {});
@@ -248,9 +236,9 @@ class _HalamanPresensiState extends State<Presencepage> {
             border: Border.all(color: Colors.grey.shade300),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey,
-                blurRadius: 5,
-                offset: Offset(0, 3),
+                color: Colors.grey.withOpacity(0.1),
+                blurRadius: 10,
+                offset: Offset(0, 5),
               ),
             ],
           ),
@@ -263,41 +251,38 @@ class _HalamanPresensiState extends State<Presencepage> {
               SizedBox(width: 15),
               CircleAvatar(
                 radius: 25,
-                backgroundColor: Colors.grey,
-                backgroundImage: AssetImage(siswa.fotoProfile),
+                backgroundColor: Colors.grey[200],
+                backgroundImage: siswa.fotoProfile.isNotEmpty ? 
+                    AssetImage(siswa.fotoProfile)
+                    : null,
+                child: siswa.fotoProfile.isEmpty 
+                    ? Icon(Icons.person, color: Colors.grey)
+                    : null
               ),
-
               SizedBox(width: 20),
-
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       siswa.nama,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     ),
                     SizedBox(height: 4),
                     Text(
-                      "Nis : ${siswa.nis}",
-                      style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                      "NIS : ${siswa.nis}",
+                      style: TextStyle(color: Colors.grey[600], fontSize: 13),
                     ),
-
                     SizedBox(height: 12),
-
                     Row(
                       children: [
                         _buildTombolBulat('H', siswa.status, index),
-                        SizedBox(width: 8),
+                        SizedBox(width: 10),
                         _buildTombolBulat('S', siswa.status, index),
-                        SizedBox(width: 8),
+                        SizedBox(width: 10),
                         _buildTombolBulat('I', siswa.status, index),
-                        SizedBox(width: 8),
+                        SizedBox(width: 10),
                         _buildTombolBulat('A', siswa.status, index),
-                        SizedBox(width: 8),
                       ],
                     ),
                   ],
@@ -314,14 +299,10 @@ class _HalamanPresensiState extends State<Presencepage> {
     bool isSelected = label == StatusSaatIni;
 
     Color warnaAktif;
-    if (label == 'H')
-      warnaAktif = Colors.green;
-    else if (label == 'S')
-      warnaAktif = Colors.orange;
-    else if (label == 'I')
-      warnaAktif = Colors.blue;
-    else
-      warnaAktif = Colors.red;
+    if (label == 'H') warnaAktif = Colors.green;
+    else if (label == 'S') warnaAktif = Colors.orange;
+    else if (label == 'I') warnaAktif = Colors.blue;
+    else warnaAktif = Colors.red;
 
     return InkWell(
       onTap: () {
@@ -348,19 +329,17 @@ class _HalamanPresensiState extends State<Presencepage> {
     );
   }
 
-  Widget _buildBottomSummary(
-    int hadir,
-    int sakit,
-    int izin,
-    int alpha,
-    int totalSiap,
-  ) {
+  Widget _buildBottomSummary(int hadir, int sakit, int izin, int alpha, int totalSiap) {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
-          BoxShadow(color: Colors.grey, blurRadius: 10, offset: Offset(0, -5)),
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.3),
+            blurRadius: 10,
+            offset: Offset(0, -5),
+          ),
         ],
       ),
       child: Center(
@@ -374,47 +353,17 @@ class _HalamanPresensiState extends State<Presencepage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Row(
-                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Expanded(
-                        child: _buildKotakStatus(
-                          "Hadir",
-                          hadir,
-                          Colors.green.shade100,
-                          Colors.green.shade600,
-                        ),
-                      ),
+                      Expanded(child: _buildKotakStatus("Hadir", hadir, Colors.green.shade100, Colors.green.shade600)),
                       SizedBox(width: 10),
-                      Expanded(
-                        child: _buildKotakStatus(
-                          "Sakit",
-                          sakit,
-                          Colors.orange.shade100,
-                          Colors.orange.shade600,
-                        ),
-                      ),
+                      Expanded(child: _buildKotakStatus("Sakit", sakit, Colors.orange.shade100, Colors.orange.shade600)),
                       SizedBox(width: 10),
-                      Expanded(
-                        child: _buildKotakStatus(
-                          "Izin",
-                          izin,
-                          Colors.blue.shade100,
-                          Colors.blue.shade600,
-                        ),
-                      ),
+                      Expanded(child: _buildKotakStatus("Izin", izin, Colors.blue.shade100, Colors.blue.shade600)),
                       SizedBox(width: 10),
-                      Expanded(
-                        child: _buildKotakStatus(
-                          "Alpha",
-                          alpha,
-                          Colors.red.shade100,
-                          Colors.red.shade600,
-                        ),
-                      ),
+                      Expanded(child: _buildKotakStatus("Alpha", alpha, Colors.red.shade100, Colors.red.shade600)),
                     ],
                   ),
                   SizedBox(height: 15),
-
                   SizedBox(
                     width: double.infinity,
                     height: 50,
@@ -424,9 +373,7 @@ class _HalamanPresensiState extends State<Presencepage> {
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blueAccent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                         elevation: 5,
                       ),
                       child: Text(
@@ -449,14 +396,8 @@ class _HalamanPresensiState extends State<Presencepage> {
     );
   }
 
-  Widget _buildKotakStatus(
-    String label,
-    int count,
-    Color bgColor,
-    Color textColor,
-  ) {
+  Widget _buildKotakStatus(String label, int count, Color bgColor, Color textColor) {
     return Container(
-      width: 75,
       padding: EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
         color: bgColor,
@@ -473,7 +414,7 @@ class _HalamanPresensiState extends State<Presencepage> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(width: 10),
+          SizedBox(width: 2),
           Text(label, style: TextStyle(color: textColor, fontSize: 12)),
         ],
       ),
